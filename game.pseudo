@@ -1,0 +1,49 @@
+Module 'gameboard' {
+  private properties {
+    board size n
+    cells array, size n*n (nested arrays)
+  }
+  public properties {
+      hasWinCondition - what player won
+  }
+  public methods {
+    createBoard(BoardSize);
+    initialize board {
+      remove all marks;
+      add event listeners on each cell;
+    }
+    set BoardSize
+    set cellMark
+  }
+  private methods {
+    checkWinCondition {
+      if board hasWinCondition = true {stop game, declare winner}
+    }
+  }
+}
+
+class cell {
+  hasMarker
+  hasEventListener
+}
+
+Module 'Game' - tracks game progress
+{
+  game state
+  number of turns
+  currentTurn: what player turn is it
+}
+
+Module 'GUI render' {
+  boardContainer = DOM location
+  method renderMark {
+    - after each turn render mark change
+  }
+}
+
+class Player {
+  playerMarker;
+  winCount;
+}
+
+
