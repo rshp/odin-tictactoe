@@ -27,7 +27,27 @@ const gameBoard = (() => {
 		board[position[0]][position[1]] = marker;
 	};
 
-	const hasWinCondition = () => {
+	const checkWinCondition = () => {
+		//Enum unique markers
+		let markers = new Set();
+		board.forEach((row) => {
+			row.forEach((value) => {
+				if (value != 'empty') markers.add(value);
+			});
+		});
+		console.log(board);
+		//check verticals
+		markers.forEach((marker) => {
+			board.forEach((row) => {
+				console.log(row);
+				let result = row.every((element) => {
+					element == marker;
+				});
+				// console.log(marker);
+				console.log(result);
+			});
+		});
+
 		//enum all different markers on board (with exeption of 'empty')
 		//for each marker check all horizontals verticals and diagonals
 		//if any found full mark that this marker has win condition
@@ -35,7 +55,18 @@ const gameBoard = (() => {
 		//for graphic representation return the type of condition met: horizontal#/vertical#/diagonal# (total of 4 diagonals)
 	};
 
-	return { createBoard, getBoard, setBoardSize, placeMarker };
+	return {
+		createBoard,
+		getBoard,
+		setBoardSize,
+		placeMarker,
+		checkWinCondition,
+	};
 })();
 // gameBoard.createBoard();
-gameBoard.placeMarker('X', [1, 1]);
+gameBoard.placeMarker('X', [0, 0]);
+gameBoard.placeMarker('X', [0, 1]);
+gameBoard.placeMarker('X', [0, 2]);
+gameBoard.placeMarker('Y', [1, 1]);
+gameBoard.placeMarker('Z', [2, 1]);
+gameBoard.checkWinCondition();
