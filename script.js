@@ -29,10 +29,15 @@ const gameBoard = (() => {
 	const placeMarker = (marker, position) => {
 		if (position[0] > boardSize || position[1] > boardSize) {
 			console.log('rowIndex out of bounds');
-			return;
+			return 'ERROR';
+		}
+		if (board[position[0]][position[1]] !== 'empty') {
+			console.log('Illegal marker placement');
+			return 'ERROR';
 		}
 		board[position[0]][position[1]] = marker;
 		winCondition = checkWinCondition();
+		return 'OK';
 	};
 
 	const rowWinCondition = (marker, board) => {
@@ -107,32 +112,12 @@ const gameBoard = (() => {
 	};
 })();
 
-// gameBoard.placeMarker('X', [0, 0]);
-// gameBoard.placeMarker('X', [0, 1]);
-// gameBoard.placeMarker('Z', [0, 2]);
-// gameBoard.getWinCondition(); //?
-// gameBoard.placeMarker('Y', [1, 0]);
-// gameBoard.placeMarker('Z', [1, 1]);
-// gameBoard.placeMarker('Z', [1, 2]);
-// gameBoard.getWinCondition(); //?
-// gameBoard.placeMarker('Z', [2, 0]);
-// gameBoard.getBoard()[0]; //?
-// gameBoard.getBoard()[1]; //?
-// gameBoard.getBoard()[2]; //?
-// gameBoard.getWinCondition(); //?
-// gameBoard.placeMarker('X', [2, 1]);
-// gameBoard.placeMarker('X', [2, 2]);
-// gameBoard.getBoard()[0]; //?
-// gameBoard.getBoard()[1]; //?
-// gameBoard.getBoard()[2]; //?
-// gameBoard.getWinCondition(); //?
-
 //Player factory
 const Player = (marker) => {
 	let playerMarker = marker;
 	const makeMove = (i, j) => {
-		gameBoard.placeMarker(playerMarker, [i, j]);
-		gameProgress.nextPlayer();
+		let actionResult = gameBoard.placeMarker(playerMarker, [i, j]);
+		if (actionResult === 'OK') gameProgress.nextPlayer();
 	};
 	return { playerMarker, makeMove };
 };
@@ -178,9 +163,12 @@ gameProgress.currentPlayer().playerMarker; //?
 gameProgress.currentPlayer().makeMove(0, 0);
 gameProgress.currentPlayer().playerMarker; //?
 gameProgress.currentPlayer().makeMove(1, 1);
-gameProgress.currentPlayer().playerMarker; //?a
+gameProgress.currentPlayer().playerMarker; //?
 gameProgress.currentPlayer().makeMove(2, 1);
-gameProgress.currentPlayer().makeMove(0, 2);
+gameProgress.currentPlayer().playerMarker; //?
+gameProgress.currentPlayer().makeMove(2, 1);
+gameProgress.currentPlayer().playerMarker; //?
+gameProgress.currentPlayer().makeMove(2, 2);
 
 gameBoard.getBoard()[0]; //?
 gameBoard.getBoard()[1]; //?
