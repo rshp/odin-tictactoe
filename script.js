@@ -3,6 +3,8 @@ DEFAUL_BOARD_SIZE = 3;
 const gameBoard = (() => {
 	let boardSize = DEFAUL_BOARD_SIZE;
 	let board = [];
+	let winCondition = null;
+
 	const createBoard = () => {
 		board = new Array(boardSize)
 			.fill(null)
@@ -10,8 +12,13 @@ const gameBoard = (() => {
 		return board;
 	};
 	board = createBoard();
+
 	const getBoard = () => {
 		return board;
+	};
+
+	const getWinCondition = () => {
+		return winCondition;
 	};
 
 	const setBoardSize = (newSize) => {
@@ -21,52 +28,160 @@ const gameBoard = (() => {
 
 	const placeMarker = (marker, position) => {
 		if (position[0] > boardSize || position[1] > boardSize) {
-			console.log('Index out of bounds');
+			console.log('rowIndex out of bounds');
 			return;
 		}
 		board[position[0]][position[1]] = marker;
+		winCondition = checkWinCondition();
 	};
 
-	const checkWinCondition = () => {
-		//Enum unique markers
+	const rowWinCondition = (marker, board) => {
+		return board.findIndex((row) => {
+			return (rowFull = row.every((element) => {
+				return element == marker;
+			}));
+		});
+	};
+
+	const columnWinCondition = (marker) => {
+		let boardTranspose = board[0].map((x, i) => board.map((x) => x[i]));
+		return rowWinCondition(marker, boardTranspose);
+	};
+
+	const diagonalWinCondition = (marker) => {
+		diagonal1 = [];
+		diagonal2 = [];
+		for (let i = 0; i < boardSize; i++) {
+			diagonal1.push(board[i][i]);
+			diagonal2.push(board[i][boardSize - i - 1]);
+		}
+		let diagonal1Full = diagonal1.every((element) => {
+			return element == marker;
+		});
+		let diagonal2Full = diagonal2.every((element) => {
+			return element == marker;
+		});
+		if (diagonal1Full) return 1;
+		if (diagonal2Full) return 2;
+		return -1;
+	};
+
+	const getMarkersList = () => {
 		let markers = new Set();
 		board.forEach((row) => {
 			row.forEach((value) => {
 				if (value != 'empty') markers.add(value);
 			});
 		});
-		console.log(board);
-		//check verticals
-		markers.forEach((marker) => {
-			board.forEach((row) => {
-				console.log(row);
-				let result = row.every((element) => {
-					element == marker;
-				});
-				// console.log(marker);
-				console.log(result);
-			});
-		});
+		return markers;
+	};
 
-		//enum all different markers on board (with exeption of 'empty')
-		//for each marker check all horizontals verticals and diagonals
-		//if any found full mark that this marker has win condition
-		//return all markers that have win condition
-		//for graphic representation return the type of condition met: horizontal#/vertical#/diagonal# (total of 4 diagonals)
+	const checkWinCondition = () => {
+		let markers = getMarkersList();
+		let winCondition = null;
+		Array.from(markers).some((marker) => {
+			if (rowWinCondition(marker, board) !== -1) {
+				winCondition = { marker, row: rowWinCondition(marker, board) };
+				return true;
+			}
+			if (columnWinCondition(marker) !== -1) {
+				winCondition = { marker, column: columnWinCondition(marker) };
+				return true;
+			}
+			if (diagonalWinCondition(marker) !== -1) {
+				winCondition = {
+					marker,
+					diagonal: diagonalWinCondition(marker),
+				};
+				return true;
+			}
+		});
+		return winCondition;
 	};
 
 	return {
-		createBoard,
 		getBoard,
 		setBoardSize,
 		placeMarker,
-		checkWinCondition,
+		getWinCondition,
 	};
 })();
-// gameBoard.createBoard();
-gameBoard.placeMarker('X', [0, 0]);
-gameBoard.placeMarker('X', [0, 1]);
-gameBoard.placeMarker('X', [0, 2]);
-gameBoard.placeMarker('Y', [1, 1]);
-gameBoard.placeMarker('Z', [2, 1]);
-gameBoard.checkWinCondition();
+
+// gameBoard.placeMarker('X', [0, 0]);
+// gameBoard.placeMarker('X', [0, 1]);
+// gameBoard.placeMarker('Z', [0, 2]);
+// gameBoard.getWinCondition(); //?
+// gameBoard.placeMarker('Y', [1, 0]);
+// gameBoard.placeMarker('Z', [1, 1]);
+// gameBoard.placeMarker('Z', [1, 2]);
+// gameBoard.getWinCondition(); //?
+// gameBoard.placeMarker('Z', [2, 0]);
+// gameBoard.getBoard()[0]; //?
+// gameBoard.getBoard()[1]; //?
+// gameBoard.getBoard()[2]; //?
+// gameBoard.getWinCondition(); //?
+// gameBoard.placeMarker('X', [2, 1]);
+// gameBoard.placeMarker('X', [2, 2]);
+// gameBoard.getBoard()[0]; //?
+// gameBoard.getBoard()[1]; //?
+// gameBoard.getBoard()[2]; //?
+// gameBoard.getWinCondition(); //?
+
+//Player factory
+const Player = (marker) => {
+	let playerMarker = marker;
+	const makeMove = (i, j) => {
+		gameBoard.placeMarker(playerMarker, [i, j]);
+		gameProgress.nextPlayer();
+	};
+	return { playerMarker, makeMove };
+};
+
+//Game progress module
+DEFAULT_PLAYER_COUNT = 2;
+const gameProgress = (() => {
+	let playerCount = DEFAULT_PLAYER_COUNT;
+	const playerMarkers = ['X', 'O', 'Z'];
+
+	let player = createPlayers();
+
+	function setPlayerCount(n) {
+		playerCount = n;
+		player = createPlayers();
+	}
+
+	function createPlayers() {
+		let players = [];
+		playerMarkers.forEach((mark) => {
+			players.push(Player(mark));
+		});
+		return players;
+	}
+
+	let currentTurnPlayer = 0;
+	let currentPlayerValue = player[currentTurnPlayer];
+
+	function currentPlayer() {
+		return currentPlayerValue;
+	}
+
+	function nextPlayer() {
+		if (currentTurnPlayer === playerCount - 1) currentTurnPlayer = 0;
+		else currentTurnPlayer += 1;
+		currentPlayerValue = player[currentTurnPlayer];
+	}
+
+	return { setPlayerCount, currentPlayer, nextPlayer };
+})();
+gameProgress.setPlayerCount(3);
+gameProgress.currentPlayer().playerMarker; //?
+gameProgress.currentPlayer().makeMove(0, 0);
+gameProgress.currentPlayer().playerMarker; //?
+gameProgress.currentPlayer().makeMove(1, 1);
+gameProgress.currentPlayer().playerMarker; //?a
+gameProgress.currentPlayer().makeMove(2, 1);
+gameProgress.currentPlayer().makeMove(0, 2);
+
+gameBoard.getBoard()[0]; //?
+gameBoard.getBoard()[1]; //?
+gameBoard.getBoard()[2]; //?
