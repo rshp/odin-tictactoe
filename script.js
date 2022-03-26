@@ -167,16 +167,68 @@ const gameProgress = (() => {
 
 	return { setPlayerCount, currentPlayer, nextPlayer };
 })();
+
+//View Module
+const render = ((gameContainer) => {
+	function parseDOM(gameContainer) {
+		//get player count vaule
+		//get board size value
+		//get board div
+		//get modal div
+	}
+
+	function processGameStart() {
+		//on initialize or
+		//player count change or board size change
+		//do followig:
+		// - initialize board
+		// - attach event listeners
+	}
+
+	function manageEL() {
+		//on call add one time ELs
+	}
+
+	function displayWinCondition(params) {
+		//on win condition
+		//draw win condition line
+		//display modal
+	}
+
+	function displayDrawMatch(params) {
+		//on draw display 'Draw' modal
+	}
+
+	function setGameParams() {
+		//player count, board size
+	}
+	function generateBoard() {
+		//create and attach board grid
+	}
+
+	function generatePlayers() {
+		//create and attach players grid
+	}
+
+	function updateBoard() {
+		//draw marker after each turn
+	}
+
+	function updateCurrentPlayer() {
+		//highlight current turn player
+	}
+})();
+
 gameProgress.setPlayerCount(3);
-gameProgress.currentPlayer().playerMarker; //?
+gameProgress.currentPlayer().playerMarker;
 gameProgress.currentPlayer().makeMove(0, 0);
-gameProgress.currentPlayer().playerMarker; //?
+gameProgress.currentPlayer().playerMarker;
 gameProgress.currentPlayer().makeMove(1, 1);
-gameProgress.currentPlayer().playerMarker; //?
+gameProgress.currentPlayer().playerMarker;
 gameProgress.currentPlayer().makeMove(2, 1);
-gameProgress.currentPlayer().playerMarker; //?
+gameProgress.currentPlayer().playerMarker;
 gameProgress.currentPlayer().makeMove(2, 1);
-gameProgress.currentPlayer().playerMarker; //?
+gameProgress.currentPlayer().playerMarker;
 gameProgress.currentPlayer().makeMove(2, 2);
 gameProgress.currentPlayer().makeMove(0, 1);
 gameProgress.currentPlayer().makeMove(0, 2);
