@@ -135,46 +135,71 @@ const Player = (marker) => {
 DEFAULT_PLAYER_COUNT = 2;
 const gameProgress = (() => {
 	let playerCount = DEFAULT_PLAYER_COUNT;
-	const playerMarkers = ['X', 'O', 'Z'];
-
-	let player = createPlayers();
+	let player = createPlayers(playerCount);
+	let currentTurnPlayer = 0;
+	let currentPlayer = player[currentTurnPlayer];
 
 	function setPlayerCount(n) {
 		playerCount = n;
 		player = createPlayers();
 	}
 
-	function createPlayers() {
+	function createPlayers(playerCount) {
 		let players = [];
-		playerMarkers.forEach((mark) => {
-			players.push(Player(mark));
-		});
+		const playerMarkers = ['X', 'O', 'Z', 'Y', 'V'];
+		for (let i = 0; i < playerCount; i++) {
+			players.push(Player(playerMarkers[i]));
+		}
 		return players;
 	}
 
-	let currentTurnPlayer = 0;
-	let currentPlayerValue = player[currentTurnPlayer];
+	function setCurrentPlayer(player) {
+		currentTurnPlayer = player;
+		currentPlayer = player[currentTurnPlayer];
+	}
 
-	function currentPlayer() {
-		return currentPlayerValue;
+	function getCurrentPlayer() {
+		return currentPlayer;
+	}
+
+	function initGame(playerCount, boardSize) {
+		setPlayerCount(playerCount);
+		gameBoard.setBoardSize(boardSize);
+		setCurrentPlayer(0);
 	}
 
 	function nextPlayer() {
 		if (currentTurnPlayer === playerCount - 1) currentTurnPlayer = 0;
 		else currentTurnPlayer += 1;
-		currentPlayerValue = player[currentTurnPlayer];
+		currentPlayer = player[currentTurnPlayer];
 	}
 
-	return { setPlayerCount, currentPlayer, nextPlayer };
+	return { getCurrentPlayer, nextPlayer, initGame };
 })();
 
 //View Module
-const render = ((gameContainer) => {
+// const gameContainer = document.querySelector('main');
+
+const render = (() => {
+	const gameContainer = getGameContainer();
+	const domElements = parseDOM(gameContainer);
 	function parseDOM(gameContainer) {
-		//get player count vaule
-		//get board size value
-		//get board div
+		const playerSelector = gameContainer.querySelector('#player-count');
+		const boardSelector = gameContainer.querySelector('#board-size');
+		const boardContainer = gameContainer.querySelector('.game-board');
+		const playersContainer = gameContainer.querySelector('.players');
+		return {
+			playerSelector,
+			boardSelector,
+			boardContainer,
+			playersContainer,
+		};
 		//get modal div
+	}
+
+	function getGameContainer() {
+		const container = document.querySelector('main');
+		return container;
 	}
 
 	function processGameStart() {
@@ -185,8 +210,19 @@ const render = ((gameContainer) => {
 		// - attach event listeners
 	}
 
-	function manageEL() {
-		//on call add one time ELs
+	function createBoardControlEL() {
+		[domElements.playerSelector, domElements.boardSelector].forEach(
+			(selector) => {
+				selector.addEventListener('change', () => {
+					gameProgress.initGame(
+						domElements.playerSelector.value,
+						domElements.boardSelector.value
+					);
+					generateBoard();
+					generatePlayers();
+				});
+			}
+		);
 	}
 
 	function displayWinCondition(params) {
@@ -203,11 +239,14 @@ const render = ((gameContainer) => {
 		//player count, board size
 	}
 	function generateBoard() {
-		//create and attach board grid
+		//clear exiting grid via innerHTML
+		//map existing board array from created board to exactly the same array that contains indices for dataset
+		//for each element in this array create div with dataset props and attach to container
+		//set grid properties on container accordingly
 	}
 
 	function generatePlayers() {
-		//create and attach players grid
+		//same as generateBoard function
 	}
 
 	function updateBoard() {
@@ -217,26 +256,27 @@ const render = ((gameContainer) => {
 	function updateCurrentPlayer() {
 		//highlight current turn player
 	}
+	return { createBoardControlEL };
 })();
+render.createBoardControlEL();
+// gameProgress.getCurrentPlayer().playerMarker;
+// gameProgress.getCurrentPlayer().makeMove(0, 0);
+// gameProgress.getCurrentPlayer().playerMarker;
+// gameProgress.getCurrentPlayer().makeMove(1, 1);
+// gameProgress.getCurrentPlayer().playerMarker;
+// gameProgress.getCurrentPlayer().makeMove(2, 1);
+// gameProgress.getCurrentPlayer().playerMarker;
+// gameProgress.getCurrentPlayer().makeMove(2, 1);
+// gameProgress.getCurrentPlayer().playerMarker;
+// gameProgress.getCurrentPlayer().makeMove(2, 2);
+// gameProgress.getCurrentPlayer().makeMove(0, 1);
+// gameProgress.getCurrentPlayer().makeMove(0, 2);
+// gameProgress.getCurrentPlayer().makeMove(1, 0);
+// gameProgress.getCurrentPlayer().makeMove(1, 2);
+// gameProgress.getCurrentPlayer().makeMove(2, 0);
+// gameProgress.initGame(2, 4);
 
-gameProgress.setPlayerCount(3);
-gameProgress.currentPlayer().playerMarker;
-gameProgress.currentPlayer().makeMove(0, 0);
-gameProgress.currentPlayer().playerMarker;
-gameProgress.currentPlayer().makeMove(1, 1);
-gameProgress.currentPlayer().playerMarker;
-gameProgress.currentPlayer().makeMove(2, 1);
-gameProgress.currentPlayer().playerMarker;
-gameProgress.currentPlayer().makeMove(2, 1);
-gameProgress.currentPlayer().playerMarker;
-gameProgress.currentPlayer().makeMove(2, 2);
-gameProgress.currentPlayer().makeMove(0, 1);
-gameProgress.currentPlayer().makeMove(0, 2);
-gameProgress.currentPlayer().makeMove(1, 0);
-gameProgress.currentPlayer().makeMove(1, 2);
-gameProgress.currentPlayer().makeMove(2, 0);
-
-gameBoard.getBoard()[0]; //?
-gameBoard.getBoard()[1]; //?
-gameBoard.getBoard()[2]; //?
-gameBoard.getWinCondition(); //?
+// gameBoard.getBoard()[0]; //?
+// gameBoard.getBoard()[1]; //?
+// gameBoard.getBoard()[2]; //?
+// gameBoard.getWinCondition(); //?
