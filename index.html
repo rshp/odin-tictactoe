@@ -11,8 +11,41 @@
 	<body>
 		<header>Tic tac toe game</header>
 		<main>
-			<div class="game-options"></div>
-			<div class="game-board"></div>
+			<div class="game-options">
+				<label for="player-count">Player count:</label>
+				<select name="player-count" id="player-count">
+					<option value="2" selected>2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+				</select>
+				<label for="board-size">Board size:</label>
+				<select name="board-size" id="board-size">
+					<option value="3" selected>3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+					<option value="6">6</option>
+					<option value="7">7</option>
+					<option value="8">8</option>
+					<option value="9">9</option>
+					<option value="10">10</option>
+				</select>
+			</div>
+			<div class="players">
+				<div class="player-card">Player 1</div>
+				<div class="player-card">Player 2</div>
+			</div>
+			<div class="game-board">
+				<div class="board-cell"></div>
+				<div class="board-cell"></div>
+				<div class="board-cell"></div>
+				<div class="board-cell"></div>
+				<div class="board-cell"></div>
+				<div class="board-cell"></div>
+				<div class="board-cell"></div>
+				<div class="board-cell"></div>
+				<div class="board-cell"></div>
+			</div>
 		</main>
 		<footer>Done as TOP curriculum project</footer>
 	</body>

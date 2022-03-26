@@ -7,6 +7,7 @@ body {
 	height: 100vh;
 	display: flex;
 	flex-direction: column;
+	align-items: center;
 }
 
 main {
@@ -14,4 +15,47 @@ main {
 }
 footer {
 	margin-top: auto;
+	font-size: 3rem;
+}
+
+header {
+	text-align: center;
+	font-size: 5rem;
+}
+
+.game-options {
+	background-color: beige;
+	display: flex;
+	justify-content: center;
+	font-size: 3rem;
+	gap: 3rem;
+}
+
+.players {
+	display: flex;
+	justify-content: center;
+	gap: 3rem;
+	font-size: 2rem;
+}
+
+.player-card {
+	background-color: lightgray;
+	border-radius: 1rem;
+	padding: 1rem;
+}
+
+input {
+	font-size: inherit;
+}
+
+.game-board {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-template-rows: repeat(3, 1fr);
+	aspect-ratio: 1;
+	gap: 5px;
+}
+
+.board-cell {
+	background-color: lightblue;
 }
