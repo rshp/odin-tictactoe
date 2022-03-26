@@ -81,7 +81,16 @@ const gameBoard = (() => {
 		return markers;
 	};
 
+	const isBoardFull = () => {
+		return !board.some((row) => {
+			return row.some((element) => {
+				return element == 'empty';
+			});
+		});
+	};
+
 	const checkWinCondition = () => {
+		if (isBoardFull()) return 'draw';
 		let markers = getMarkersList();
 		let winCondition = null;
 		Array.from(markers).some((marker) => {
@@ -169,7 +178,13 @@ gameProgress.currentPlayer().playerMarker; //?
 gameProgress.currentPlayer().makeMove(2, 1);
 gameProgress.currentPlayer().playerMarker; //?
 gameProgress.currentPlayer().makeMove(2, 2);
+gameProgress.currentPlayer().makeMove(0, 1);
+gameProgress.currentPlayer().makeMove(0, 2);
+gameProgress.currentPlayer().makeMove(1, 0);
+gameProgress.currentPlayer().makeMove(1, 2);
+gameProgress.currentPlayer().makeMove(2, 0);
 
 gameBoard.getBoard()[0]; //?
 gameBoard.getBoard()[1]; //?
 gameBoard.getBoard()[2]; //?
+gameBoard.getWinCondition(); //?
