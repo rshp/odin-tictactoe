@@ -215,11 +215,11 @@ const render = (() => {
 			(selector) => {
 				selector.addEventListener('change', () => {
 					gameProgress.initGame(
-						domElements.playerSelector.value,
-						domElements.boardSelector.value
+						+domElements.playerSelector.value, //convert to number otherwise drawBoard breaks
+						+domElements.boardSelector.value
 					);
-					generateBoard();
-					generatePlayers();
+					drawBoard();
+					drawPlayers();
 				});
 			}
 		);
@@ -238,15 +238,23 @@ const render = (() => {
 	function setGameParams() {
 		//player count, board size
 	}
-	function generateBoard() {
-		//clear exiting grid via innerHTML
-		//map existing board array from created board to exactly the same array that contains indices for dataset
-		//for each element in this array create div with dataset props and attach to container
-		//set grid properties on container accordingly
+	function drawBoard() {
+		domElements.boardContainer.innerHTML = '';
+		gameBoard.getBoard().forEach((row, i) => {
+			row.forEach((element, j) => {
+				let cell = document.createElement('div');
+				cell.classList.add('board-cell');
+				cell.dataset.coords = `${i},${j}`;
+				domElements.boardContainer.appendChild(cell);
+			});
+		});
+		domElements.boardContainer.style.gridTemplateColumns = `repeat(${
+			gameBoard.getBoard().length
+		},1fr`;
 	}
 
-	function generatePlayers() {
-		//same as generateBoard function
+	function drawPlayers() {
+		//same as drawBoard function
 	}
 
 	function updateBoard() {
@@ -280,3 +288,5 @@ render.createBoardControlEL();
 // gameBoard.getBoard()[1]; //?
 // gameBoard.getBoard()[2]; //?
 // gameBoard.getWinCondition(); //?
+
+// console.log(gameBoard.getBoard());
