@@ -162,6 +162,10 @@ const gameProgress = (() => {
 		return currentPlayer;
 	}
 
+	function getPlayers() {
+		return player;
+	}
+
 	function initGame(playerCount, boardSize) {
 		setPlayerCount(playerCount);
 		gameBoard.setBoardSize(boardSize);
@@ -174,7 +178,7 @@ const gameProgress = (() => {
 		currentPlayer = player[currentTurnPlayer];
 	}
 
-	return { getCurrentPlayer, nextPlayer, initGame };
+	return { getCurrentPlayer, nextPlayer, initGame, getPlayers };
 })();
 
 //View Module
@@ -242,7 +246,7 @@ const render = (() => {
 		domElements.boardContainer.innerHTML = '';
 		gameBoard.getBoard().forEach((row, i) => {
 			row.forEach((element, j) => {
-				let cell = document.createElement('div');
+				const cell = document.createElement('div');
 				cell.classList.add('board-cell');
 				cell.dataset.coords = `${i},${j}`;
 				domElements.boardContainer.appendChild(cell);
@@ -254,7 +258,15 @@ const render = (() => {
 	}
 
 	function drawPlayers() {
-		//same as drawBoard function
+		domElements.playersContainer.innerHTML = '';
+		console.log(gameProgress.getPlayers());
+		gameProgress.getPlayers().forEach((player, index) => {
+			const playerCard = document.createElement('div');
+			playerCard.classList.add('player-card');
+			playerCard.dataset.playerNum = index;
+			playerCard.innerHTML = `Player ${player.playerMarker}`;
+			domElements.playersContainer.appendChild(playerCard);
+		});
 	}
 
 	function updateBoard() {
@@ -290,3 +302,4 @@ render.createBoardControlEL();
 // gameBoard.getWinCondition(); //?
 
 // console.log(gameBoard.getBoard());
+// console.log(gameProgress.getPlayers());
