@@ -135,7 +135,7 @@ const Player = (marker) => {
 DEFAULT_PLAYER_COUNT = 2;
 const gameProgress = (() => {
 	let playerCount = DEFAULT_PLAYER_COUNT;
-	let player = createPlayers(playerCount);
+	let player = createPlayers();
 	let currentTurnPlayer = 0;
 	let currentPlayer = player[currentTurnPlayer];
 
@@ -144,7 +144,7 @@ const gameProgress = (() => {
 		player = createPlayers();
 	}
 
-	function createPlayers(playerCount) {
+	function createPlayers() {
 		let players = [];
 		const playerMarkers = ['X', 'O', 'Z', 'Y', 'V'];
 		for (let i = 0; i < playerCount; i++) {
@@ -153,9 +153,9 @@ const gameProgress = (() => {
 		return players;
 	}
 
-	function setCurrentPlayer(player) {
-		currentTurnPlayer = player;
-		currentPlayer = player[currentTurnPlayer];
+	function setCurrentPlayer(playerNumber) {
+		currentTurnPlayer = playerNumber;
+		currentPlayer = player[playerNumber];
 	}
 
 	function getCurrentPlayer() {
@@ -229,6 +229,20 @@ const render = (() => {
 		);
 	}
 
+	function createBoardEL() {
+		domElements.boardContainer.addEventListener('click', (e) => {
+			e.target.innerHTML = gameProgress.getCurrentPlayer().playerMarker;
+			gameProgress
+				.getCurrentPlayer()
+				.makeMove(
+					e.target.dataset.coord_row,
+					e.target.dataset.coord_col
+				);
+
+			console.log(gameBoard.getBoard());
+		});
+	}
+
 	function displayWinCondition(params) {
 		//on win condition
 		//draw win condition line
@@ -248,7 +262,8 @@ const render = (() => {
 			row.forEach((element, j) => {
 				const cell = document.createElement('div');
 				cell.classList.add('board-cell');
-				cell.dataset.coords = `${i},${j}`;
+				cell.dataset.coord_row = i;
+				cell.dataset.coord_col = j;
 				domElements.boardContainer.appendChild(cell);
 			});
 		});
@@ -259,7 +274,6 @@ const render = (() => {
 
 	function drawPlayers() {
 		domElements.playersContainer.innerHTML = '';
-		console.log(gameProgress.getPlayers());
 		gameProgress.getPlayers().forEach((player, index) => {
 			const playerCard = document.createElement('div');
 			playerCard.classList.add('player-card');
@@ -276,10 +290,15 @@ const render = (() => {
 	function updateCurrentPlayer() {
 		//highlight current turn player
 	}
-	return { createBoardControlEL };
+	return { createBoardControlEL, createBoardEL, drawBoard, drawPlayers };
 })();
+gameProgress.initGame(2, 3);
+render.drawBoard();
+render.drawPlayers();
 render.createBoardControlEL();
-// gameProgress.getCurrentPlayer().playerMarker;
+render.createBoardEL();
+
+//gameProgress.getCurrentPlayer().playerMarker;
 // gameProgress.getCurrentPlayer().makeMove(0, 0);
 // gameProgress.getCurrentPlayer().playerMarker;
 // gameProgress.getCurrentPlayer().makeMove(1, 1);
@@ -296,10 +315,13 @@ render.createBoardControlEL();
 // gameProgress.getCurrentPlayer().makeMove(2, 0);
 // gameProgress.initGame(2, 4);
 
+// console.log(gameBoard.getBoard());
+
 // gameBoard.getBoard()[0]; //?
 // gameBoard.getBoard()[1]; //?
 // gameBoard.getBoard()[2]; //?
 // gameBoard.getWinCondition(); //?
 
 // console.log(gameBoard.getBoard());
+// gameProgress.initGame(3, 4);
 // console.log(gameProgress.getPlayers());
