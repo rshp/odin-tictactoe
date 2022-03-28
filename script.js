@@ -170,6 +170,10 @@ const gameProgress = (() => {
 		setPlayerCount(playerCount);
 		gameBoard.setBoardSize(boardSize);
 		setCurrentPlayer(0);
+		render.drawBoard();
+		render.drawPlayers();
+		render.createBoardControlEL();
+		render.createBoardEL();
 	}
 
 	function nextPlayer() {
@@ -231,14 +235,17 @@ const render = (() => {
 
 	function createBoardEL() {
 		domElements.boardContainer.addEventListener('click', (e) => {
-			e.target.innerHTML = gameProgress.getCurrentPlayer().playerMarker;
+			if (!e.target.classList.contains('board-cell')) return;
 			gameProgress
 				.getCurrentPlayer()
 				.makeMove(
 					e.target.dataset.coord_row,
 					e.target.dataset.coord_col
 				);
-
+			e.target.innerHTML =
+				gameBoard.getBoard()[e.target.dataset.coord_row][
+					e.target.dataset.coord_col
+				];
 			console.log(gameBoard.getBoard());
 		});
 	}
@@ -270,6 +277,9 @@ const render = (() => {
 		domElements.boardContainer.style.gridTemplateColumns = `repeat(${
 			gameBoard.getBoard().length
 		},1fr`;
+		domElements.boardContainer.style.gridTemplateRows = `repeat(${
+			gameBoard.getBoard().length
+		},1fr`;
 	}
 
 	function drawPlayers() {
@@ -292,11 +302,8 @@ const render = (() => {
 	}
 	return { createBoardControlEL, createBoardEL, drawBoard, drawPlayers };
 })();
+
 gameProgress.initGame(2, 3);
-render.drawBoard();
-render.drawPlayers();
-render.createBoardControlEL();
-render.createBoardEL();
 
 //gameProgress.getCurrentPlayer().playerMarker;
 // gameProgress.getCurrentPlayer().makeMove(0, 0);
