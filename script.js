@@ -125,8 +125,7 @@ const gameBoard = (() => {
 const Player = (marker) => {
 	let playerMarker = marker;
 	const makeMove = (i, j) => {
-		let actionResult = gameBoard.placeMarker(playerMarker, [i, j]);
-		if (actionResult === 'OK') gameProgress.nextPlayer();
+		return gameBoard.placeMarker(playerMarker, [i, j]);
 	};
 	return { playerMarker, makeMove };
 };
@@ -158,6 +157,11 @@ const gameProgress = (() => {
 		currentPlayer = player[playerNumber];
 	}
 
+	function currentPlayerMove(i, j) {
+		let actionResult = currentPlayer.makeMove(i, j);
+		if (actionResult === 'OK') gameProgress.nextPlayer();
+	}
+
 	function getCurrentPlayer() {
 		return currentPlayer;
 	}
@@ -182,7 +186,13 @@ const gameProgress = (() => {
 		currentPlayer = player[currentTurnPlayer];
 	}
 
-	return { getCurrentPlayer, nextPlayer, initGame, getPlayers };
+	return {
+		getCurrentPlayer,
+		nextPlayer,
+		initGame,
+		getPlayers,
+		currentPlayerMove,
+	};
 })();
 
 //View Module
@@ -210,14 +220,6 @@ const render = (() => {
 		return container;
 	}
 
-	function processGameStart() {
-		//on initialize or
-		//player count change or board size change
-		//do followig:
-		// - initialize board
-		// - attach event listeners
-	}
-
 	function createBoardControlEL() {
 		[domElements.playerSelector, domElements.boardSelector].forEach(
 			(selector) => {
@@ -236,12 +238,10 @@ const render = (() => {
 	function createBoardEL() {
 		domElements.boardContainer.addEventListener('click', (e) => {
 			if (!e.target.classList.contains('board-cell')) return;
-			gameProgress
-				.getCurrentPlayer()
-				.makeMove(
-					e.target.dataset.coord_row,
-					e.target.dataset.coord_col
-				);
+			gameProgress.currentPlayerMove(
+				e.target.dataset.coord_row,
+				e.target.dataset.coord_col
+			);
 			e.target.innerHTML =
 				gameBoard.getBoard()[e.target.dataset.coord_row][
 					e.target.dataset.coord_col
