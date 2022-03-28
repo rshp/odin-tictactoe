@@ -159,7 +159,10 @@ const gameProgress = (() => {
 
 	function currentPlayerMove(i, j) {
 		let actionResult = currentPlayer.makeMove(i, j);
-		if (actionResult === 'OK') gameProgress.nextPlayer();
+		if (actionResult !== 'OK') return;
+		if (gameBoard.getWinCondition() !== null)
+			render.drawWinCondition(gameBoard.getWinCondition());
+		gameProgress.nextPlayer();
 	}
 
 	function getCurrentPlayer() {
@@ -246,14 +249,33 @@ const render = (() => {
 				gameBoard.getBoard()[e.target.dataset.coord_row][
 					e.target.dataset.coord_col
 				];
-			console.log(gameBoard.getBoard());
 		});
 	}
 
-	function displayWinCondition(params) {
-		//on win condition
-		//draw win condition line
-		//display modal
+	function drawWinCondition(winCondition) {
+		if (winCondition == 'draw') {
+			console.log('Its a draw');
+			//do some animaton, display modal
+			return;
+		}
+		let winConditionCells = Array.from(
+			domElements.boardContainer.childNodes
+		).filter((element) => {
+			if ('row' in winCondition)
+				return element.dataset.coord_row == winCondition.row;
+			if ('column' in winCondition)
+				return element.dataset.coord_col == winCondition.column;
+			if ('diagonal' in winCondition && winCondition.diagonal == 1)
+				return element.dataset.coord_row == element.dataset.coord_col;
+			if ('diagonal' in winCondition && winCondition.diagonal == 2)
+				return (
+					element.dataset.coord_col ==
+					-element.dataset.coord_row + gameBoard.getBoard().length - 1
+				);
+		});
+		winConditionCells.forEach((element) => {
+			element.classList.add('board-cell-highlight');
+		});
 	}
 
 	function displayDrawMatch(params) {
@@ -300,7 +322,13 @@ const render = (() => {
 	function updateCurrentPlayer() {
 		//highlight current turn player
 	}
-	return { createBoardControlEL, createBoardEL, drawBoard, drawPlayers };
+	return {
+		createBoardControlEL,
+		createBoardEL,
+		drawBoard,
+		drawPlayers,
+		drawWinCondition,
+	};
 })();
 
 gameProgress.initGame(2, 3);

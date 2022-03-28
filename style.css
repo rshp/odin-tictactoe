@@ -62,3 +62,7 @@ input {
 	font-size: 5em;
 	text-align: center;
 }
+
+.board-cell-highlight {
+	background-color: crimson;
+}
