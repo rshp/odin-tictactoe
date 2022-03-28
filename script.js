@@ -179,8 +179,6 @@ const gameProgress = (() => {
 		setCurrentPlayer(0);
 		render.drawBoard();
 		render.drawPlayers();
-		render.createBoardControlEL();
-		render.createBoardEL();
 	}
 
 	function nextPlayer() {
@@ -199,8 +197,6 @@ const gameProgress = (() => {
 })();
 
 //View Module
-// const gameContainer = document.querySelector('main');
-
 const render = (() => {
 	const gameContainer = getGameContainer();
 	const domElements = parseDOM(gameContainer);
@@ -278,15 +274,16 @@ const render = (() => {
 		});
 	}
 
-	function displayDrawMatch(params) {
-		//on draw display 'Draw' modal
+	function displayModal(winCondition) {
+		//on game end display modal with winner/draw message
 	}
 
-	function setGameParams() {
-		//player count, board size
-	}
 	function drawBoard() {
-		domElements.boardContainer.innerHTML = '';
+		while (domElements.boardContainer.firstChild) {
+			domElements.boardContainer.removeChild(
+				domElements.boardContainer.firstChild
+			);
+		}
 		gameBoard.getBoard().forEach((row, i) => {
 			row.forEach((element, j) => {
 				const cell = document.createElement('div');
@@ -315,10 +312,6 @@ const render = (() => {
 		});
 	}
 
-	function updateBoard() {
-		//draw marker after each turn
-	}
-
 	function updateCurrentPlayer() {
 		//highlight current turn player
 	}
@@ -332,31 +325,5 @@ const render = (() => {
 })();
 
 gameProgress.initGame(2, 3);
-
-//gameProgress.getCurrentPlayer().playerMarker;
-// gameProgress.getCurrentPlayer().makeMove(0, 0);
-// gameProgress.getCurrentPlayer().playerMarker;
-// gameProgress.getCurrentPlayer().makeMove(1, 1);
-// gameProgress.getCurrentPlayer().playerMarker;
-// gameProgress.getCurrentPlayer().makeMove(2, 1);
-// gameProgress.getCurrentPlayer().playerMarker;
-// gameProgress.getCurrentPlayer().makeMove(2, 1);
-// gameProgress.getCurrentPlayer().playerMarker;
-// gameProgress.getCurrentPlayer().makeMove(2, 2);
-// gameProgress.getCurrentPlayer().makeMove(0, 1);
-// gameProgress.getCurrentPlayer().makeMove(0, 2);
-// gameProgress.getCurrentPlayer().makeMove(1, 0);
-// gameProgress.getCurrentPlayer().makeMove(1, 2);
-// gameProgress.getCurrentPlayer().makeMove(2, 0);
-// gameProgress.initGame(2, 4);
-
-// console.log(gameBoard.getBoard());
-
-// gameBoard.getBoard()[0]; //?
-// gameBoard.getBoard()[1]; //?
-// gameBoard.getBoard()[2]; //?
-// gameBoard.getWinCondition(); //?
-
-// console.log(gameBoard.getBoard());
-// gameProgress.initGame(3, 4);
-// console.log(gameProgress.getPlayers());
+render.createBoardControlEL();
+render.createBoardEL();
