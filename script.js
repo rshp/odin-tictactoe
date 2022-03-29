@@ -338,7 +338,7 @@ const render = (() => {
 			const playerCard = document.createElement('div');
 			playerCard.classList.add('player-card');
 			playerCard.dataset.player = player.playerMarker;
-			playerCard.innerHTML = `Player ${player.playerMarker}`;
+			playerCard.innerHTML = `${player.playerMarker}`;
 			domElements.playersContainer.appendChild(playerCard);
 		});
 	}
