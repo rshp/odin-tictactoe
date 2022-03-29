@@ -165,6 +165,7 @@ const gameProgress = (() => {
 			return;
 		}
 		gameProgress.nextPlayer();
+		render.highlightCurrentPlayer();
 	}
 
 	function getCurrentPlayer() {
@@ -181,6 +182,7 @@ const gameProgress = (() => {
 		setCurrentPlayer(0);
 		render.drawBoard();
 		render.drawPlayers();
+		render.highlightCurrentPlayer();
 	}
 
 	function nextPlayer() {
@@ -234,8 +236,6 @@ const render = (() => {
 						+domElements.playerSelector.value, //convert to number otherwise drawBoard breaks
 						+domElements.boardSelector.value
 					);
-					drawBoard();
-					drawPlayers();
 				});
 			}
 		);
@@ -337,14 +337,23 @@ const render = (() => {
 		gameProgress.getPlayers().forEach((player, index) => {
 			const playerCard = document.createElement('div');
 			playerCard.classList.add('player-card');
-			playerCard.dataset.playerNum = index;
+			playerCard.dataset.player = player.playerMarker;
 			playerCard.innerHTML = `Player ${player.playerMarker}`;
 			domElements.playersContainer.appendChild(playerCard);
 		});
 	}
 
-	function updateCurrentPlayer() {
-		//highlight current turn player
+	function highlightCurrentPlayer() {
+		Array.from(domElements.playersContainer.childNodes).forEach(
+			(element) => {
+				element.classList.remove('player-highlight');
+			}
+		);
+		domElements.playersContainer
+			.querySelector(
+				`[data-player=${gameProgress.getCurrentPlayer().playerMarker}]`
+			)
+			.classList.add('player-highlight');
 	}
 	return {
 		createBoardControlEL,
@@ -354,6 +363,7 @@ const render = (() => {
 		drawPlayers,
 		drawWinCondition,
 		displayModal,
+		highlightCurrentPlayer,
 	};
 })();
 
