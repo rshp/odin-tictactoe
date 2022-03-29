@@ -66,3 +66,11 @@ input {
 .board-cell-highlight {
 	background-color: crimson;
 }
+
+dialog {
+	padding: 1em;
+}
+
+dialog::backdrop {
+	background: rgb(0 0 0 / 0.4);
+}

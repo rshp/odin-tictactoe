@@ -160,8 +160,10 @@ const gameProgress = (() => {
 	function currentPlayerMove(i, j) {
 		let actionResult = currentPlayer.makeMove(i, j);
 		if (actionResult !== 'OK') return;
-		if (gameBoard.getWinCondition() !== null)
+		if (gameBoard.getWinCondition() !== null) {
 			render.drawWinCondition(gameBoard.getWinCondition());
+			return;
+		}
 		gameProgress.nextPlayer();
 	}
 
@@ -205,13 +207,16 @@ const render = (() => {
 		const boardSelector = gameContainer.querySelector('#board-size');
 		const boardContainer = gameContainer.querySelector('.game-board');
 		const playersContainer = gameContainer.querySelector('.players');
+		const modal = gameContainer.querySelector('dialog');
+		const modalContent = gameContainer.querySelector('.modal-content');
 		return {
 			playerSelector,
 			boardSelector,
 			boardContainer,
 			playersContainer,
+			modal,
+			modalContent,
 		};
-		//get modal div
 	}
 
 	function getGameContainer() {
@@ -250,8 +255,8 @@ const render = (() => {
 
 	function drawWinCondition(winCondition) {
 		if (winCondition == 'draw') {
+			displayModal(winCondition);
 			console.log('Its a draw');
-			//do some animaton, display modal
 			return;
 		}
 		let winConditionCells = Array.from(
@@ -272,10 +277,18 @@ const render = (() => {
 		winConditionCells.forEach((element) => {
 			element.classList.add('board-cell-highlight');
 		});
+		displayModal(winCondition);
+	}
+
+	function modalMessage(winCondition) {
+		if (winCondition === `draw`) return `It's a draw`;
+		if ('marker' in winCondition)
+			return `Player ${winCondition.marker} won`;
 	}
 
 	function displayModal(winCondition) {
-		//on game end display modal with winner/draw message
+		domElements.modalContent.innerHTML = modalMessage(winCondition);
+		domElements.modal.show();
 	}
 
 	function drawBoard() {
@@ -321,6 +334,7 @@ const render = (() => {
 		drawBoard,
 		drawPlayers,
 		drawWinCondition,
+		displayModal,
 	};
 })();
 
