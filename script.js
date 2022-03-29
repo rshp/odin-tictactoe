@@ -207,14 +207,14 @@ const render = (() => {
 		const boardSelector = gameContainer.querySelector('#board-size');
 		const boardContainer = gameContainer.querySelector('.game-board');
 		const playersContainer = gameContainer.querySelector('.players');
-		const modal = gameContainer.querySelector('dialog');
+		const modalWrapper = gameContainer.querySelector('.modal-wrapper');
 		const modalContent = gameContainer.querySelector('.modal-content');
 		return {
 			playerSelector,
 			boardSelector,
 			boardContainer,
 			playersContainer,
-			modal,
+			modalWrapper,
 			modalContent,
 		};
 	}
@@ -237,6 +237,16 @@ const render = (() => {
 				});
 			}
 		);
+	}
+
+	function createModalEL() {
+		domElements.modalWrapper.addEventListener('click', (e) => {
+			domElements.modalWrapper.classList.toggle('modal-show');
+			gameProgress.initGame(
+				+domElements.playerSelector.value,
+				+domElements.boardSelector.value
+			);
+		});
 	}
 
 	function createBoardEL() {
@@ -288,7 +298,7 @@ const render = (() => {
 
 	function displayModal(winCondition) {
 		domElements.modalContent.innerHTML = modalMessage(winCondition);
-		domElements.modal.show();
+		domElements.modalWrapper.classList.toggle('modal-show');
 	}
 
 	function drawBoard() {
@@ -331,6 +341,7 @@ const render = (() => {
 	return {
 		createBoardControlEL,
 		createBoardEL,
+		createModalEL,
 		drawBoard,
 		drawPlayers,
 		drawWinCondition,
@@ -341,3 +352,4 @@ const render = (() => {
 gameProgress.initGame(2, 3);
 render.createBoardControlEL();
 render.createBoardEL();
+render.createModalEL();

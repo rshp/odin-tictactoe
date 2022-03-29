@@ -67,10 +67,25 @@ input {
 	background-color: crimson;
 }
 
-dialog {
-	padding: 1em;
+.modal-wrapper {
+	position: absolute;
+	top: 0;
+	left: 0;
+
+	width: 100vw;
+	height: 100vh;
+	background: rgb(0 0 0 / 0.4);
+	align-items: center;
+	justify-content: center;
+	display: none;
+}
+.modal-content {
+	width: 50vw;
+	background-color: white;
+	padding: 1rem;
+	text-align: center;
 }
 
-dialog::backdrop {
-	background: rgb(0 0 0 / 0.4);
+.modal-show {
+	display: flex;
 }
