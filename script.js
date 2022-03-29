@@ -209,6 +209,7 @@ const render = (() => {
 		const playersContainer = gameContainer.querySelector('.players');
 		const modalWrapper = gameContainer.querySelector('.modal-wrapper');
 		const modalContent = gameContainer.querySelector('.modal-content');
+		const resetButton = gameContainer.querySelector('.reset-button');
 		return {
 			playerSelector,
 			boardSelector,
@@ -216,6 +217,7 @@ const render = (() => {
 			playersContainer,
 			modalWrapper,
 			modalContent,
+			resetButton,
 		};
 	}
 
@@ -237,6 +239,12 @@ const render = (() => {
 				});
 			}
 		);
+		domElements.resetButton.addEventListener('click', () => {
+			gameProgress.initGame(
+				+domElements.playerSelector.value,
+				+domElements.boardSelector.value
+			);
+		});
 	}
 
 	function createModalEL() {
