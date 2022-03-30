@@ -264,10 +264,14 @@ const render = (() => {
 				e.target.dataset.coord_row,
 				e.target.dataset.coord_col
 			);
-			e.target.innerHTML =
+			let markerContainer = `<svg viewBox="-4 -16 20 20" xmlns="http://www.w3.org/2000/svg">
+			<text>${
 				gameBoard.getBoard()[e.target.dataset.coord_row][
 					e.target.dataset.coord_col
-				];
+				]
+			}</text>
+		</svg>`;
+			e.target.innerHTML = markerContainer;
 			e.target.classList.add('board-cell-marked');
 		});
 	}

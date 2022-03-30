@@ -148,17 +148,27 @@ footer svg:hover {
 
 .game-board {
 	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	aspect-ratio: 1;
 	gap: 5px;
-	/* justify-items: center; */
-	/* align-items: center; */
+	justify-items: center;
+	align-items: center;
+	aspect-ratio: 1;
 }
 
 .board-cell {
 	position: relative;
-	text-align: center;
 	border-radius: 10px;
+	min-width: 100%;
+	min-height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0px;
+	user-select: none;
+}
+
+.board-cell svg {
+	fill: #255957;
+	filter: drop-shadow(3px 3px 15px #255957);
 }
 
 .board-cell::after {
@@ -173,9 +183,9 @@ footer svg:hover {
 	border-radius: 1rem;
 }
 
-/* .board-cell-marked {
-	border: 1px solid #255957;
-} */
+.board-cell-marked {
+	transform: scale(0.7);
+}
 
 .board-cell-marked::after {
 	display: none;
