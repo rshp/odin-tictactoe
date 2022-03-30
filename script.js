@@ -306,7 +306,9 @@ const render = (() => {
 		findWinConditionCells(winCondition).forEach((element) => {
 			element.classList.add('board-cell-highlight');
 		});
-		displayModal(winCondition);
+		setTimeout(() => {
+			displayModal(winCondition);
+		}, 300);
 	}
 
 	function modalMessage(winCondition) {
