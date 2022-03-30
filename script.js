@@ -268,10 +268,11 @@ const render = (() => {
 				gameBoard.getBoard()[e.target.dataset.coord_row][
 					e.target.dataset.coord_col
 				];
+			e.target.classList.add('board-cell-marked');
 		});
 	}
 
-	function findWinConditionCells() {
+	function findWinConditionCells(winCondition) {
 		return Array.from(domElements.boardContainer.childNodes).filter(
 			(element) => {
 				if ('row' in winCondition)
@@ -298,7 +299,7 @@ const render = (() => {
 			displayModal(winCondition);
 			return;
 		}
-		findWinConditionCells().forEach((element) => {
+		findWinConditionCells(winCondition).forEach((element) => {
 			element.classList.add('board-cell-highlight');
 		});
 		displayModal(winCondition);
