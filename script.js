@@ -28,11 +28,11 @@ const gameBoard = (() => {
 
 	const placeMarker = (marker, position) => {
 		if (position[0] > boardSize || position[1] > boardSize) {
-			console.log('rowIndex out of bounds');
+			// console.log('rowIndex out of bounds');
 			return 'ERROR';
 		}
 		if (board[position[0]][position[1]] !== 'empty') {
-			console.log('Illegal marker placement');
+			// console.log('Illegal marker placement');
 			return 'ERROR';
 		}
 		board[position[0]][position[1]] = marker;
@@ -271,28 +271,34 @@ const render = (() => {
 		});
 	}
 
+	function findWinConditionCells() {
+		return Array.from(domElements.boardContainer.childNodes).filter(
+			(element) => {
+				if ('row' in winCondition)
+					return element.dataset.coord_row == winCondition.row;
+				if ('column' in winCondition)
+					return element.dataset.coord_col == winCondition.column;
+				if ('diagonal' in winCondition && winCondition.diagonal == 1)
+					return (
+						element.dataset.coord_row == element.dataset.coord_col
+					);
+				if ('diagonal' in winCondition && winCondition.diagonal == 2)
+					return (
+						element.dataset.coord_col ==
+						-element.dataset.coord_row +
+							gameBoard.getBoard().length -
+							1
+					);
+			}
+		);
+	}
+
 	function drawWinCondition(winCondition) {
 		if (winCondition == 'draw') {
 			displayModal(winCondition);
-			console.log('Its a draw');
 			return;
 		}
-		let winConditionCells = Array.from(
-			domElements.boardContainer.childNodes
-		).filter((element) => {
-			if ('row' in winCondition)
-				return element.dataset.coord_row == winCondition.row;
-			if ('column' in winCondition)
-				return element.dataset.coord_col == winCondition.column;
-			if ('diagonal' in winCondition && winCondition.diagonal == 1)
-				return element.dataset.coord_row == element.dataset.coord_col;
-			if ('diagonal' in winCondition && winCondition.diagonal == 2)
-				return (
-					element.dataset.coord_col ==
-					-element.dataset.coord_row + gameBoard.getBoard().length - 1
-				);
-		});
-		winConditionCells.forEach((element) => {
+		findWinConditionCells().forEach((element) => {
 			element.classList.add('board-cell-highlight');
 		});
 		displayModal(winCondition);
@@ -309,12 +315,16 @@ const render = (() => {
 		domElements.modalWrapper.classList.toggle('modal-show');
 	}
 
-	function drawBoard() {
+	function clearBoard() {
 		while (domElements.boardContainer.firstChild) {
 			domElements.boardContainer.removeChild(
 				domElements.boardContainer.firstChild
 			);
 		}
+	}
+
+	function drawBoard() {
+		clearBoard();
 		gameBoard.getBoard().forEach((row, i) => {
 			row.forEach((element, j) => {
 				const cell = document.createElement('div');
